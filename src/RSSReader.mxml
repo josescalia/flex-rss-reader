@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute" height="556" creationComplete="initApp()" width="1050" 
+	 titleIcon="@Embed(source='../image/rss_logo.jpg')" title="Rss Reader">
+	<mx:Script>
+		<![CDATA[
+			import mx.binding.utils.BindingUtils;
+			import mx.containers.Form;
+			import mx.skins.Border;
+			import mx.skins.halo.BusyCursor;
+			import mx.controls.Alert;
+			public var tempLink:String;
+			[Bindable]public var serverURL:String = "http://localhost/flex_xml_lab/rss/rss_feeder.php";
+
+			private function initApp():void{
+				//localFile.send();
+				rssMain.send();
+				
+			}
+
+			private function getRss():void{
+				rssFeeder.send();
+			}
+			
+			private function addRss():void{
+				rssAdd.send();
+				//read the response & show an alert
+				
+				//reload the feeder
+				refreshForm();
+				
+				//clean Up Add Form
+				cleanUpAdd();
+				
+			}
+			
+			private function delRss():void{
+				rssDelete.send();
+				//read the response & show an alert
+				
+				//reload the feeder
+				refreshForm();
+				cleanUpEdit();
+				
+			}
+			
+			private function editRss():void{
+				rssEdit.send();
+				//read the response & show an alert
+				
+				//reload the feeder
+				refreshForm();
+				cleanUpEdit();
+			}
+			
+			
+			private function resetAdd():void{
+                addRssLink.text="";
+				addRssName.text="";
+				addRssName.setFocus();
+				
+			}
+			
+			private function cleanUpAdd():void{
+				addRssLink.text="";
+				addRssName.text="";
+			}
+			
+			private function cleanUpEdit():void{
+				editRssId.text="";
+				editRssLink.text="";
+				editRssName.text="";
+			}
+			
+			private function refreshForm():void{
+				initApp();
+				dg2.invalidateList();
+				feeder.invalidateDisplayList();
+				
+				
+			}
+			
+			private function xmlReturned(event:Event):void{
+                serverURL =localFile.lastResult.serverURL.toString();
+            }
+		]]>
+	</mx:Script>
+	
+	
+	
+	<mx:ViewStack x="10" y="39" id="viewstack1" width="1028" height="478" backgroundColor="#0496da">
+		<mx:Canvas label="Rss Reader" width="100%" height="100%">
+			<mx:Panel x="10" y="100" width="514" height="330" layout="absolute" title="Rss List" shadowDirection="right" shadowDistance="10" dropShadowEnabled="true" dropShadowColor="#030C4D">
+				<mx:DataGrid id="dxData" selectable="true"
+					x="-1.5" y="0" width="495.5" height="290" dataProvider="{rssFeeder.lastResult.rss.channel.item}" 
+					click="{body.htmlText=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].description}
+				   	       {tempLink=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].link}
+					       ">
+					<mx:columns>
+						<mx:DataGridColumn  headerText="Title" dataField="title"/>
+						<mx:DataGridColumn width="100" headerText="Publish Date" dataField="pubDate"/>
+					</mx:columns>
+				
+				</mx:DataGrid>
+			</mx:Panel>
+			<mx:Panel id="reader" title="Description" width="486" x="532" y="100" height="330" cornerRadius="7" dropShadowEnabled="true" shadowDistance="10" shadowDirection="right" dropShadowColor="#030C4D">
+			  <mx:TextArea id="body" editable="false" width="465" height="280"  wordWrap="true" enabled="true" fontFamily="Georgia" fontSize="12"/>
+			</mx:Panel>
+			<mx:TextArea x="533" y="56" height="34" width="485" editable="false" text="{rssFeeder.lastResult.rss.channel.description}" dropShadowEnabled="true" shadowDistance="8" shadowDirection="right"/>
+			<mx:Label x="531" y="36" text="Feeder Description :" width="119"/>
+			<mx:ComboBox id="feeder" x="10" y="24" dataProvider="{rssMain.lastResult.rss_list.RSS}" labelField="label"
+				change="getRss()" width="319">
+			</mx:ComboBox>
+			<mx:Label x="17" y="54" text="Site Feeder  :" width="96"/>
+			<mx:Label x="105" y="54" width="233" id="lblFeeder" text="{rssFeeder.lastResult.rss.channel.title}"/>
+			<mx:Label x="17" y="74" text="Site Link    :" width="96"/>
+			<mx:Label x="105" y="74" width="224" id="lblLink" text="{rssFeeder.lastResult.rss.channel.link}"/>
+			<mx:LinkButton id="goTo" label="Read This" width="99" click="navigateToURL(new URLRequest (tempLink))" x="919" y="438" 
+				buttonMode="true"/> 
+ 		</mx:Canvas>
+		<mx:Canvas label="Rss Entry" width="100%" height="100%">
+			<mx:Canvas x="417" y="10" width="601" height="448" borderStyle="outset" borderColor="#4C5102" cornerRadius="4" borderThickness="2">
+				<mx:DataGrid x="8" y="43" id="dg2" width="579" height="392" dataProvider="{rssMain.lastResult.rss_list.RSS}"
+					click="{editRssName.text=rssMain.lastResult.rss_list.RSS[dg2.selectedIndex].label}
+					       {editRssLink.text=rssMain.lastResult.rss_list.RSS[dg2.selectedIndex].data}
+					       {editRssId.text=rssMain.lastResult.rss_list.RSS[dg2.selectedIndex].RSS_ID}">
+					<mx:columns>
+						<mx:DataGridColumn headerText="No" dataField="RSS_ID" width="30"/>
+						<mx:DataGridColumn headerText="Rss Name" dataField="label" width="130"/>
+						<mx:DataGridColumn headerText="Rss Link" dataField="data"/>
+					</mx:columns>
+				</mx:DataGrid>
+				<mx:Label x="9" y="16" text="Listed Rss Entry" width="128" fontWeight="bold" fontSize="14" fontFamily="Arial"/>
+			</mx:Canvas>
+			<mx:Canvas x="10" y="10" width="399" height="219" borderStyle="outset" borderThickness="2" borderColor="#4C5102">
+				<mx:Label x="154.5" y="41" text="Add Rss Entry" width="86" fontWeight="bold"/>
+				<mx:Form x="10" y="59" width="375" height="88" backgroundColor="#F6F7C3">
+					<mx:FormItem label="Rss Name   :" width="342" horizontalAlign="left" fontWeight="bold">
+						<mx:TextInput width="253" id="addRssName"/>
+					</mx:FormItem>
+					<mx:FormItem label="Rss Link  :" horizontalAlign="left" width="342" fontWeight="bold" textDecoration="normal">
+						<mx:TextInput width="253" id="addRssLink"/>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Button x="10" y="166" label="Add" width="77" click="addRss()"/>
+				<mx:Button x="308" y="166" label="Reset" width="77" click="resetAdd()"/>
+			</mx:Canvas>
+			<mx:Canvas x="10" y="237" width="399" height="219" borderStyle="outset" borderColor="#4C5102">
+				<mx:Label x="154.5" y="19" text="Edit Rss Entry" width="86" fontWeight="bold"/>
+				<mx:Form x="10" y="36" width="375" height="110" backgroundColor="#F6F7C3">
+					<mx:FormItem label="No  :" horizontalAlign="left" width="133" fontWeight="bold" textDecoration="normal">
+						<mx:TextInput width="45" id="editRssId" editable="false"/>
+					</mx:FormItem>
+					<mx:FormItem label="Rss Name   :" width="340" horizontalAlign="left" fontWeight="bold">
+						<mx:TextInput width="250" id="editRssName"/>
+					</mx:FormItem>
+					<mx:FormItem label="Rss Link  :" horizontalAlign="left" width="339" fontWeight="bold" textDecoration="normal">
+						<mx:TextInput width="249" id="editRssLink"/>
+					</mx:FormItem>
+				</mx:Form>
+				<mx:Button x="10" y="170" label="Delete" width="77" click="delRss()"/>
+				<mx:Button x="308" y="170" label="Update" width="77" click="editRss()"/>
+			</mx:Canvas>
+		</mx:Canvas>
+	</mx:ViewStack>
+	
+	<!-- Define HttpService here -->
+	<mx:HTTPService id="rssMain" url="{serverURL}" showBusyCursor="true" useProxy="false" method="GET">
+	   <mx:request xmlns="">
+	   	    <action>read</action>
+	   </mx:request>
+	</mx:HTTPService>
+	<mx:HTTPService id="rssFeeder" url="{feeder.value}" showBusyCursor="true">
+	</mx:HTTPService>
+	
+	<mx:HTTPService id="rssAdd" url="{serverURL}?action=add" showBusyCursor="true" useProxy="false" method="GET">
+	    <mx:request xmlns="">
+	   	    <action>add</action>
+	   	    <rss_name>{addRssName.text}</rss_name>
+	   	    <rss_link>{addRssLink.text}</rss_link>
+	   </mx:request>
+	</mx:HTTPService>
+	
+	<mx:HTTPService id="rssDelete" url="{serverURL}?action=add" showBusyCursor="true" useProxy="false" method="GET">
+	    <mx:request xmlns="">
+	   	    <action>delete</action>
+	   	    <rss_id>{editRssId.text}</rss_id>
+	   </mx:request>
+	</mx:HTTPService>
+
+	<mx:HTTPService id="rssEdit" url="{serverURL}?action=add" showBusyCursor="true" useProxy="false" method="GET">
+	    <mx:request xmlns="">
+	   	    <action>edit</action>
+	   	    <rss_id>{editRssId.text}</rss_id>
+	   	    <rss_name>{editRssName.text}</rss_name>
+	   	    <rss_link>{editRssLink.text}</rss_link>
+	   </mx:request>
+	</mx:HTTPService>
+	
+	<mx:HTTPService id="localFile" url="assets/res.xml" useProxy="false" resultFormat="e4x" 
+         contentType="application/xml" result="xmlReturned(event)"/>
+		
+
+	<mx:TabBar x="9" y="19" dataProvider="viewstack1" backgroundColor="#0496da">
+	</mx:TabBar>
+	<mx:Label x="889" y="516" text="Created By : Mojo@2009" width="149" fontWeight="bold" textAlign="center"/>
+	<mx:Button x="988" y="10" label="Exit" click="exit()"/>
+</mx:WindowedApplication>
