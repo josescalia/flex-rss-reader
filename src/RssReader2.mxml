@@ -183,4 +183,5 @@
 	</mx:TabBar>
 	<mx:Label x="723" y="604" text="Designed and Developed By : Josescalia@2010" width="269" height="16"/>
 	<mx:LinkButton x="801" y="619" label="http://josescalia.blogspot.com" width="198" click="navigateToURL(new URLRequest ('http://josescalia.blogspot.com'))" />
+	<mx:Button x="924" y="3" label="Exit" height="22" width="68" click="exit()"/>
 </mx:WindowedApplication>
