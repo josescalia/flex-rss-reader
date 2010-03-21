@@ -9,6 +9,7 @@
 <sourceAttachmentPath/>
 </compiler>
 <applications>
+<application path="RssReader2.mxml"/>
 <application path="RSSReader.mxml"/>
 </applications>
 <modules/>

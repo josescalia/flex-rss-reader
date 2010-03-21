@@ -1,0 +1,2 @@
+Google=http://google.com
+Detik=http://detik.com

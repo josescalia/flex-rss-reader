@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="1012" height="702" creationComplete="initApp()" borderColor="#8EF7C5" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#DDF2AB, #DDF2AB]">
+	<mx:Script>
+		<![CDATA[
+			import mx.effects.easing.Bounce;
+			import mx.messaging.Channel;
+			import mx.core.UIComponent;
+			import mx.effects.Glow;
+			import mx.containers.Form;
+			import mx.skins.Border;
+			import mx.skins.halo.BusyCursor;
+			import mx.controls.Alert;
+			public var tempLink:String;
+			[Bindable]public var serverURL:String = "rss_feeder.xml";
+
+			private function initApp():void{
+				//defaultDirectory = File.applicationDirectory;
+				rssMain.send();
+			}
+
+			private function getRss():void{
+				rssFeeder.send();
+			}
+			
+			/**
+			private function fileOpenSelected(event:Event):void {
+				stream = new FileStream();
+				stream.openAsync(currentFile, FileMode.READ);
+				stream.addEventListener(Event.COMPLETE, fileReadHandler);
+				stream.addEventListener(IOErrorEvent.IO_ERROR, readIOErrorHandler);
+				dataChanged = false;
+				title = "Text Editor - " + currentFile.name;
+				currentFile.removeEventListener(Event.SELECT, fileOpenSelected);
+			}
+			
+			private function fileReadHandler(event:Event):void{
+				var str:String = stream.readUTFBytes(stream.bytesAvailable);
+				stream.close();
+				var lineEndPattern:RegExp = new RegExp(File.lineEnding, "g");
+				str = str.replace(lineEndPattern, "\n");
+				mainTextField.text = str; 
+				stream.close();
+			}
+			*/
+			
+			/**
+			* Handles I/O errors that may come about when opening the currentFile.
+			*/
+			private function readIOErrorHandler(event:Event):void{
+				Alert.show("The specified currentFile cannot be opened.", "Error", Alert.OK, this);
+			}
+			/**
+			* Handles I/O errors that may come about when writing the currentFile.
+			*/
+			private function writeIOErrorHandler(event:Event):void{
+				Alert.show("The specified currentFile cannot be saved.", "Error", Alert.OK, this);
+			}
+//			private function addRss():void{
+//				rssAdd.send();
+//				//read the response & show an alert
+//				
+//				//reload the feeder
+//				refreshForm();
+//				
+//				//clean Up Add Form
+//				cleanUpAdd();
+//				
+//			}
+//			
+//			private function delRss():void{
+//				rssDelete.send();
+//				//read the response & show an alert
+//				
+//				//reload the feeder
+//				refreshForm();
+//				cleanUpEdit();
+//				
+//			}
+//			
+//			private function editRss():void{
+//				rssEdit.send();
+//				//read the response & show an alert
+//				
+//				//reload the feeder
+//				refreshForm();
+//				cleanUpEdit();
+//			}
+			
+			
+//			private function resetAdd():void{
+//                addRssLink.text="";
+//				addRssName.text="";
+//				addRssName.setFocus();
+//				
+//			}
+			
+//			private function cleanUpAdd():void{
+//				addRssLink.text="";
+//				addRssName.text="";
+//			}
+//			
+//			private function cleanUpEdit():void{
+//				editRssId.text="";
+//				editRssLink.text="";
+//				editRssName.text="";
+//			}
+//			
+//			private function refreshForm():void{
+//				initApp();
+//				dg2.invalidateList();
+//				feeder.invalidateDisplayList();
+//			}
+		]]>
+	</mx:Script>
+	<mx:ViewStack id="viewstack1" width="974" height="576" y="27" x="18" cornerRadius="10">
+		<mx:Canvas label="News" width="100%" height="100%" id="News"
+			hideEffect="{wipeUpFx}" 
+			showEffect="{wipeDownFx}" backgroundColor="#DCF9E1" cornerRadius="10" borderColor="#108BE1" borderStyle="solid">
+			<mx:ComboBox x="20" y="11" width="334" id="feeder" dataProvider="{rssMain.lastResult.feeder.rss_list}" change="getRss()"></mx:ComboBox>
+			<mx:Label x="20" y="51" text="Source's Site : " fontWeight="bold"/>
+			<mx:Label x="103" y="51" width="358" id="lblSrcSite" text="{rssFeeder.lastResult.rss.channel.title}" fontWeight="bold"/>
+			<mx:Label x="103" y="76" width="371" id="lblSrcLink" text="{rssFeeder.lastResult.rss.channel.link}" textDecoration="underline"/>
+			<mx:Label x="20" y="77" text="Site Link     :" width="98" fontWeight="bold"/>
+			<mx:Panel x="20" y="102" width="468" height="448" layout="absolute" title="Rss List">
+				<mx:DataGrid x="10" y="10" width="428" height="388" id="dxData" dataProvider="{rssFeeder.lastResult.rss.channel.item}"
+					click="{htmlLoader.htmlText=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].description}
+					       {tempLink=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].link}
+					       ">
+					<mx:columns>
+						<mx:DataGridColumn width="500" headerText="Title" dataField="title"/>
+						<mx:DataGridColumn headerText="Date" dataField="pubDate"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:Panel>
+			<mx:Label x="496" y="9" text="Feeder Description :" width="129" fontWeight="bold"/>
+			<mx:TextArea x="496" y="24" height="43" width="458" editable="false" text="{rssFeeder.lastResult.rss.channel.description}" dropShadowEnabled="true" shadowDistance="8" shadowDirection="right"/>
+			<mx:Image x="496" y="75" width="458" height="55" id="imgRss" source="{rssFeeder.lastResult.rss.channel.image.url}" scaleContent="false"/>
+			<mx:Panel x="496" y="138" width="458" height="412" layout="absolute" title="Descipription">
+				<mx:HTML x="10" y="10" width="418" height="325" id="htmlLoader"/>
+				<mx:LinkButton x="21" y="343" label="Read More" click="navigateToURL(new URLRequest (tempLink))"/>
+			</mx:Panel>
+			<mx:Button x="362" y="11" label="Refresh Feed" click="initApp()" width="113"/>
+			
+		</mx:Canvas>
+		<mx:Canvas label="Rss Entry" width="100%" height="100%"
+			hideEffect="{wipeUpFx}" 
+			showEffect="{wipeDownFx}" backgroundColor="#DCF9E1" id="rssEntry" cornerRadius="10" borderColor="#108BE1" borderStyle="solid">
+			<mx:Panel x="20" y="10" width="433" height="540" layout="absolute" title="Feed List">
+				<mx:DataGrid id="dg" x="-0.5" y="0" width="413.5" height="500" dataProvider="{rssMain.lastResult.feeder.rss_list}"
+					>
+					<mx:columns>
+						<mx:DataGridColumn width="30" headerText="ID" dataField="id"/>
+						<mx:DataGridColumn width="100" headerText="Name" dataField="label"/>
+						<mx:DataGridColumn headerText="Feed" dataField="data"/>
+					</mx:columns>
+				</mx:DataGrid>
+			</mx:Panel>
+			<mx:Panel x="485" y="10" width="467" height="540" layout="absolute" title="Information">
+				<mx:TextArea x="10" y="10" height="480" width="427">
+					<mx:text><![CDATA[How to add or edit the feed list
+
+1. Open the file rss_feeder.xml on this application instalation directory.
+2. You can open the file using the notepad or others favourite text editor.]]></mx:text>
+				</mx:TextArea>
+			</mx:Panel>
+		</mx:Canvas>
+
+	</mx:ViewStack>
+	<!-- Define HttpService here -->
+	<mx:HTTPService id="rssMain" url="{serverURL}" showBusyCursor="true" useProxy="false" method="GET">
+	   <mx:request xmlns="">
+	   	    <action>read</action>
+	   </mx:request>
+	</mx:HTTPService>
+	<mx:HTTPService id="rssFeeder" url="{feeder.value}" showBusyCursor="true">
+	</mx:HTTPService>
+	<!--Effects-->
+	<mx:WipeLeft id="wipeLeftFx" duration="200"/>
+	<mx:WipeRight id="wipeRightFx" duration="200"/>
+	<mx:WipeDown id="wipeDownFx" duration="200"/>
+	<mx:WipeUp id="wipeUpFx" duration="200"/>
+	<mx:TabBar x="40" y="6" width="228" dataProvider="viewstack1">
+	</mx:TabBar>
+	<mx:Label x="723" y="604" text="Designed and Developed By : Josescalia@2010" width="269" height="16"/>
+	<mx:LinkButton x="801" y="619" label="http://josescalia.blogspot.com" width="198" click="navigateToURL(new URLRequest ('http://josescalia.blogspot.com'))" />
+</mx:WindowedApplication>

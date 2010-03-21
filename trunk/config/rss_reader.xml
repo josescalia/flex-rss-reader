@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<server_url>http://10.32.15.200:8080/rss/rss_feeder.php</server_url>
+</config>
