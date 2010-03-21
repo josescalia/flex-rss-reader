@@ -1,0 +1,23 @@
+<feeder>
+   <rss_list>
+       <id>1</id>
+       <label>Detik.com</label>
+       <data>http://rss.detik.com/index.php/detikcom</data>
+   </rss_list>
+   <rss_list>
+       <id>2</id>
+       <label>Detik Photo</label>
+       <data>http://rss.detik.com/index.php/foto</data>
+   </rss_list>
+   <rss_list>
+       <id>3</id>
+       <label>Kompas Bola</label>
+       <data>http://www.kompas.com/getrss/bola</data>
+   </rss_list>
+   <rss_list>
+       <id>4</id>
+       <label>Detikinet</label>
+       <data>http://www.detikinet.com/feed</data>
+   </rss_list>
+</feeder>
+

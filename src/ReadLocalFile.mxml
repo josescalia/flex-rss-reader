@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+	creationComplete="initData()">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			private function initData():void{
+				mySvc.send();
+				
+			}
+			private function getData():void{
+				var str:String;
+				str = mySvc.lastResult.toString();
+			    txt.text=str;
+			}
+		]]>
+	</mx:Script>
+	<mx:ComboBox id="feeder" x="10" y="23" dataProvider="{mySvc.lastResult}" 
+				 width="126">
+	</mx:ComboBox>			
+	<mx:HTTPService id="mySvc" url="../assets/res.txt">
+		
+	</mx:HTTPService>
+	<mx:Button x="291" y="242" label="Button" click="getData()"/>
+	<mx:TextArea x="10" y="66" height="168" width="346" id="txt"/>
+</mx:WindowedApplication>
