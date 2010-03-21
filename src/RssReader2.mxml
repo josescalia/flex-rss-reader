@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="1012" height="702" creationComplete="initApp()" borderColor="#8EF7C5" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#DDF2AB, #DDF2AB]">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
+	layout="absolute" width="1012" height="702" creationComplete="initApp()" borderColor="#8EF7C5" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#DDF2AB, #DDF2AB]" xmlns:ns1="com.google.code.flexiframe.*">
 	<mx:Script>
 		<![CDATA[
+			import flash.net.navigateToURL;
 			import mx.effects.easing.Bounce;
 			import mx.messaging.Channel;
 			import mx.core.UIComponent;
@@ -12,7 +15,8 @@
 			import mx.controls.Alert;
 			public var tempLink:String;
 			[Bindable]public var serverURL:String = "rss_feeder.xml";
-
+			public var howToLink:String="html/how-to.html";
+			
 			private function initApp():void{
 				//defaultDirectory = File.applicationDirectory;
 				rssMain.send();
@@ -22,39 +26,7 @@
 				rssFeeder.send();
 			}
 			
-			/**
-			private function fileOpenSelected(event:Event):void {
-				stream = new FileStream();
-				stream.openAsync(currentFile, FileMode.READ);
-				stream.addEventListener(Event.COMPLETE, fileReadHandler);
-				stream.addEventListener(IOErrorEvent.IO_ERROR, readIOErrorHandler);
-				dataChanged = false;
-				title = "Text Editor - " + currentFile.name;
-				currentFile.removeEventListener(Event.SELECT, fileOpenSelected);
-			}
-			
-			private function fileReadHandler(event:Event):void{
-				var str:String = stream.readUTFBytes(stream.bytesAvailable);
-				stream.close();
-				var lineEndPattern:RegExp = new RegExp(File.lineEnding, "g");
-				str = str.replace(lineEndPattern, "\n");
-				mainTextField.text = str; 
-				stream.close();
-			}
-			*/
-			
-			/**
-			* Handles I/O errors that may come about when opening the currentFile.
-			*/
-			private function readIOErrorHandler(event:Event):void{
-				Alert.show("The specified currentFile cannot be opened.", "Error", Alert.OK, this);
-			}
-			/**
-			* Handles I/O errors that may come about when writing the currentFile.
-			*/
-			private function writeIOErrorHandler(event:Event):void{
-				Alert.show("The specified currentFile cannot be saved.", "Error", Alert.OK, this);
-			}
+
 //			private function addRss():void{
 //				rssAdd.send();
 //				//read the response & show an alert
@@ -143,25 +115,19 @@
 			
 		</mx:Canvas>
 		<mx:Canvas label="Rss Entry" width="100%" height="100%"
-			hideEffect="{wipeUpFx}" 
+			hideEffect="{wipeUpFx}"
 			showEffect="{wipeDownFx}" backgroundColor="#DCF9E1" id="rssEntry" cornerRadius="10" borderColor="#108BE1" borderStyle="solid">
-			<mx:Panel x="20" y="10" width="433" height="540" layout="absolute" title="Feed List">
-				<mx:DataGrid id="dg" x="-0.5" y="0" width="413.5" height="500" dataProvider="{rssMain.lastResult.feeder.rss_list}"
+			<mx:Panel x="20" y="10" width="927" height="540" layout="absolute" title="Feed List">
+				<mx:DataGrid id="dg" x="9.5" y="10" width="897.5" height="458" dataProvider="{rssMain.lastResult.feeder.rss_list}"
 					>
 					<mx:columns>
 						<mx:DataGridColumn width="30" headerText="ID" dataField="id"/>
-						<mx:DataGridColumn width="100" headerText="Name" dataField="label"/>
+						<mx:DataGridColumn width="300" headerText="Name" dataField="label"/>
 						<mx:DataGridColumn headerText="Feed" dataField="data"/>
 					</mx:columns>
 				</mx:DataGrid>
-			</mx:Panel>
-			<mx:Panel x="485" y="10" width="467" height="540" layout="absolute" title="Information">
-				<mx:TextArea x="10" y="10" height="480" width="427">
-					<mx:text><![CDATA[How to add or edit the feed list
-
-1. Open the file rss_feeder.xml on this application instalation directory.
-2. You can open the file using the notepad or others favourite text editor.]]></mx:text>
-				</mx:TextArea>
+				<mx:LinkButton x="613" y="468" label="Click here to read How to Add or Edit Feeder List" width="294"
+					click="navigateToURL(new URLRequest(howToLink))"/>
 			</mx:Panel>
 		</mx:Canvas>
 
