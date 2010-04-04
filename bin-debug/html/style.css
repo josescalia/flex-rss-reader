@@ -1,0 +1,33 @@
+#ctnTitle{
+  font-family: Verdana,Tahoma,Seriff;
+  font-size : 14px;
+  font-weight: bold;
+  text-align: center; 
+}
+
+#ctnBody{
+  background-color:#dcf9e1;
+  font-family: Verdana,Tahoma,Seriff;
+  font-size : 10px;
+  padding: 10;
+  text-align: justify;
+}
+
+#srcContent{
+  background-color:white;
+  font-family:Courier New;
+  font-size : 10px;
+  padding:5;
+  width:400px;
+  display: box;
+}
+
+#srcImage{
+  background-color:white;
+  font-family:Courier New;
+  font-size : 10px;
+  padding:10;
+  width:530px;
+  display: box;
+  text-align: center;
+}
