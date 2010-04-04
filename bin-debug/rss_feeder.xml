@@ -20,5 +20,34 @@
        <label>Detikinet</label>
        <data>http://www.detikinet.com/feed</data>
    </rss_list>
+   <rss_list>
+       <id>5</id>
+       <label>Funtasticus</label>
+       <data>http://feeds.feedburner.com/funtasticus</data>
+   </rss_list>
+   <rss_list>
+       <id>6</id>
+       <label>Totally Crap</label>
+       <data>http://www.totallycrap.com/magazine/rss_2.0/</data>
+   </rss_list>
+   <rss_list>
+       <id>7</id>
+       <label>Inilah.com</label>
+       <data>http://inilah.com/rss/terkini/</data>
+   </rss_list>
+   <rss_list>
+       <id>8</id>
+       <label>Totally NSFW</label>
+       <data>http://www.totallynsfw.com/nsfw/rss_2.0/</data>
+   </rss_list> 
+   <rss_list>
+       <id>9</id>
+       <label>Java Net</label>
+       <data>http://java.net/atom/feed</data>
+   </rss_list> 
+   <rss_list>
+       <id>10</id>
+       <label>Flex Examples</label>
+       <data>http://feeds.feedburner.com/FlexExamples</data>
+   </rss_list> 
 </feeder>
-
