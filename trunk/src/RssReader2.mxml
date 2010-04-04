@@ -1,4 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+#####################################################################
+#
+# Flex Rss Reader is a tool for reading news or blog headlines
+# This is my first project using Adobe Flex 
+# This project is licensed by GNU and hosted at 
+# http://code.google.com/p/flex-rss-reader/
+# You're freely to modify the source and rebuilt this Application and
+# also free to distribute this application
+# This application highly depent of a file called rss_feeder.xml
+# The list of rss site is stored on this file.
+# Visit the Developer Blog on
+# http://josescalia.blogspot.com [Indonesian Version]
+# http://josescalia.worpress.com [Englis Version]
+#
+# Jakarta, April 2010
+# Thnks 
+# Josescalia
+#  
+#####################################################################
+
+
+-->
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:flexiframe="http://code.google.com/p/flex-iframe/"
 	layout="absolute" width="1012" height="702" creationComplete="initApp()" borderColor="#8EF7C5" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#DDF2AB, #DDF2AB]" xmlns:ns1="com.google.code.flexiframe.*">
@@ -17,71 +40,30 @@
 			[Bindable]public var serverURL:String = "rss_feeder.xml";
 			public var howToLink:String="html/how-to.html";
 			
+			//method to initialiaze the Application and read the source feed from rss_feeder.xml
 			private function initApp():void{
 				//defaultDirectory = File.applicationDirectory;
 				rssMain.send();
 			}
-
+			
+			//method to read selected RssFeed from the provider
 			private function getRss():void{
 				rssFeeder.send();
 			}
 			
+			//method to fill the description detail of the feed
+			//The selection branch determine if the Description of the feed is Null or not
+			//and it's keep the Application running properly
+			private function fillDetail():void{
+				if(rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].description==null){
+					Alert.show("The description is Empty");
+					htmlLoader.htmlText="<b>Sorry, Cannot show the head lines description</b>";
+				}else{
+					htmlLoader.htmlText=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].description;
+					tempLink=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].link;
+				}
+			}
 
-//			private function addRss():void{
-//				rssAdd.send();
-//				//read the response & show an alert
-//				
-//				//reload the feeder
-//				refreshForm();
-//				
-//				//clean Up Add Form
-//				cleanUpAdd();
-//				
-//			}
-//			
-//			private function delRss():void{
-//				rssDelete.send();
-//				//read the response & show an alert
-//				
-//				//reload the feeder
-//				refreshForm();
-//				cleanUpEdit();
-//				
-//			}
-//			
-//			private function editRss():void{
-//				rssEdit.send();
-//				//read the response & show an alert
-//				
-//				//reload the feeder
-//				refreshForm();
-//				cleanUpEdit();
-//			}
-			
-			
-//			private function resetAdd():void{
-//                addRssLink.text="";
-//				addRssName.text="";
-//				addRssName.setFocus();
-//				
-//			}
-			
-//			private function cleanUpAdd():void{
-//				addRssLink.text="";
-//				addRssName.text="";
-//			}
-//			
-//			private function cleanUpEdit():void{
-//				editRssId.text="";
-//				editRssLink.text="";
-//				editRssName.text="";
-//			}
-//			
-//			private function refreshForm():void{
-//				initApp();
-//				dg2.invalidateList();
-//				feeder.invalidateDisplayList();
-//			}
 		]]>
 	</mx:Script>
 	<mx:ViewStack id="viewstack1" width="974" height="576" y="27" x="18" cornerRadius="10">
@@ -95,9 +77,7 @@
 			<mx:Label x="20" y="77" text="Site Link     :" width="98" fontWeight="bold"/>
 			<mx:Panel x="20" y="102" width="468" height="448" layout="absolute" title="Rss List">
 				<mx:DataGrid x="10" y="10" width="428" height="388" id="dxData" dataProvider="{rssFeeder.lastResult.rss.channel.item}"
-					click="{htmlLoader.htmlText=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].description}
-					       {tempLink=rssFeeder.lastResult.rss.channel.item[dxData.selectedIndex].link}
-					       ">
+					click="fillDetail()">
 					<mx:columns>
 						<mx:DataGridColumn width="500" headerText="Title" dataField="title"/>
 						<mx:DataGridColumn headerText="Date" dataField="pubDate"/>
@@ -108,7 +88,7 @@
 			<mx:TextArea x="496" y="24" height="43" width="458" editable="false" text="{rssFeeder.lastResult.rss.channel.description}" dropShadowEnabled="true" shadowDistance="8" shadowDirection="right"/>
 			<mx:Image x="496" y="75" width="458" height="55" id="imgRss" source="{rssFeeder.lastResult.rss.channel.image.url}" scaleContent="false"/>
 			<mx:Panel x="496" y="138" width="458" height="412" layout="absolute" title="Descipription">
-				<mx:HTML x="10" y="10" width="418" height="325" id="htmlLoader"/>
+				<mx:HTML x="10" y="10" width="418" height="325" id="htmlLoader" borderStyle="solid"/>
 				<mx:LinkButton x="21" y="343" label="Read More" click="navigateToURL(new URLRequest (tempLink))"/>
 			</mx:Panel>
 			<mx:Button x="362" y="11" label="Refresh Feed" click="initApp()" width="113"/>
